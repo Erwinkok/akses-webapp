@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  beginAt: 
+  endAt: 
+  memberId: 
+  spaceId: 
+
+two:
+  beginAt: 
+  endAt: 
+  memberId: 
+  spaceId: 
