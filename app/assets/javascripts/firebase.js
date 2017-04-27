@@ -12,7 +12,7 @@ $(document).ready(function(){
 
 	firebase.initializeApp(config);
 
-	$("#new_user").one("submit", function(event) {
+	$("#sign_in_form").one("submit", function(event) {
 		event.preventDefault();
 		var $this = $(this);
 		var email = $("#sign_in_email").val();
@@ -30,18 +30,20 @@ $(document).ready(function(){
 		});
 	});
 
-	 $("#sign_up").click(function(event) {
-	 	event.preventDefault();
-		var $this = $(this);
-	 	var email = $("#sign_up_email").val();
-	 	var password = $("#sign_up_password").val();
-	 	console.log(email);
-	 	firebase.auth().createUserWithEmailAndPassword(email, password).then(function(result){
-			$this.submit()
-		}).catch(function(error) {
-	 	  console.log("Error ", error);
-	 	});
-	 });
+	//TODO Fix the firebase login after register, like ruby on rails does.
+	// $("#sign_up_form").one('submit', function(event) {
+	// 	event.preventDefault();
+	//	var $this = $(this);
+	// 	var email = $("#sign_up_email").val();
+	// 	var password = $("#sign_up_password").val();
+	// 	console.log(email);
+	// 	firebase.auth().createUserWithEmailAndPassword(email, password).then(function(result){
+	//		console.log("registered");
+	//		$this.submit()
+	//	}).catch(function(error) {
+	// 	  console.log("Error ", error);
+	// 	});
+	// });
 
 	$("#sign_out").click(function(){
 		firebase.auth().signOut();
@@ -53,11 +55,6 @@ $(document).ready(function(){
 		console.log($admin);
 
 	});
-
-
-
-
-
 });
 
 /* - - - - FUNCTIONS - - - - */
