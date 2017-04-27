@@ -1,75 +1,131 @@
 $(document).ready(function(){
 	var $admin = null;
 	// Initialize Firebase
-	var config = {
-	  apiKey: "AIzaSyCGhqnb48DGJ73DyrNNHTK0_AYxgtpA58o",
-	  authDomain: "akses-dev.firebaseapp.com",
-	  databaseURL: "https://akses-dev.firebaseio.com",
-	  projectId: "akses-dev",
-	  storageBucket: "akses-dev.appspot.com",
-	  messagingSenderId: "389795367383"
-	};
+	initializeFirebase();
 
-	firebase.initializeApp(config);
+	// Calling all the event listeners
+	eventListeners();
 
-	$("#sign_in_form").one("submit", function(event) {
-		event.preventDefault();
-		var $this = $(this);
-		var email = $("#sign_in_email").val();
-		var password = $("#sign_in_password").val();
-		//console.log(email);
-		firebase.auth().signInWithEmailAndPassword(email, password).then(function(result){
-			//console.log("form submitted");
-			$this.submit();
-		}).catch(function(error) {
-			if(error.code === "auth/wrong-password"){
-				console.log("Wrong password");
-			} else {
-				console.log("Error signing in: ", error);	  	
-			}
-		});
-	});
-
-	//TODO Fix the firebase login after register, like ruby on rails does.
-	// $("#sign_up_form").one('submit', function(event) {
-	// 	event.preventDefault();
-	//	var $this = $(this);
-	// 	var email = $("#sign_up_email").val();
-	// 	var password = $("#sign_up_password").val();
-	// 	console.log(email);
-	// 	firebase.auth().createUserWithEmailAndPassword(email, password).then(function(result){
-	//		console.log("registered");
-	//		$this.submit()
-	//	}).catch(function(error) {
-	// 	  console.log("Error ", error);
-	// 	});
-	// });
-
-	$("#sign_out").click(function(){
-		firebase.auth().signOut();
-	});
-
+	//Checking what the current auth state is
 	firebase.auth().onAuthStateChanged(function(user) {
-	  	console.log("User", user);
-		$admin = user;
-		console.log($admin);
-
+	  	if(user != null) {
+			getSpaceId(user.uid);
+		}
 	});
 });
 
 /* - - - - FUNCTIONS - - - - */
 
-function getSpaceId(userId){
-	firebase.database().ref('users/'+userId).once("value").then(function(snapshot){
-		console.log(snapshot.val());
+function initializeFirebase() {
+	var config = {
+		apiKey: "AIzaSyCGhqnb48DGJ73DyrNNHTK0_AYxgtpA58o",
+		authDomain: "akses-dev.firebaseapp.com",
+		databaseURL: "https://akses-dev.firebaseio.com",
+		projectId: "akses-dev",
+		storageBucket: "akses-dev.appspot.com",
+		messagingSenderId: "389795367383"
+	};
+
+	firebase.initializeApp(config);
+}
+
+function getSpaceId(userUid){
+	firebase.database().ref('admins/users/'+userUid).once("value").then(function(snapshot){
+		snapshot.forEach(function (adminSnapshot) {
+			getSpaceMembers(adminSnapshot.getKey());
+		})
 	});
 }
 
-function getSpaceMembers(){
-	firebase.database().ref("members/").once('value').then(function(snapshot){
+function getSpaceMembers(spaceId){
+	firebase.database().ref("spaceMembers/"+spaceId).once('value').then(function(snapshot){
 		snapshot.forEach(function(memberSnapshot) {
 			var member = memberSnapshot.val();
 			console.log(member);
 		});
 	});
 }
+
+//All the event listeners
+function eventListeners(){
+	//This gets called when an user tries to log in
+	$("#sign_in_form").one("submit", function(event) {
+		/**
+		 * This makes sure that rails doesn't leave the page before firebase could do anyting.
+		 * Without it firebase will trow an instant network error
+		 */
+		event.preventDefault();
+
+		// Getting all the needed variables
+		var $this = $(this);
+		var email = $("#sign_in_email").val();
+		var password = $("#sign_in_password").val();
+
+		//Calling the firebase login method
+		firebaseSignInWithEmailAndPassword($this, email, password);
+	});
+
+	//This gets called when an user tries to create a new account
+	$("#sign_up_form").one('submit', function(event) {
+		//TODO Fix the firebase login after register, like ruby on rails does.
+		/**
+		 * This makes sure that rails doesn't leave the page before firebase could do anyting.
+		 * Without it firebase will trow an instant network error
+		 */
+		event.preventDefault();
+
+		//Getting all the needed variables
+		var $this = $(this);
+		var email = $("#sign_up_email").val();
+		var password = $("#sign_up_password").val();
+
+		//Calling the firebase sign up method
+		firebaseCreateUserWithEmailAndPassword($this, email, password);
+	});
+
+	//Look if someone clicks the sign out button
+	$("#sign_out").click(function(){
+		//Log out from firebase
+		firebase.auth().signOut();
+	});
+}
+
+/**
+ * Firebase sign in method
+ * @params {form} $this
+ * @params {string} email
+ * @params {string} password
+ */
+function firebaseSignInWithEmailAndPassword($this, email, password){
+	firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
+		$this.submit();
+	}).catch(function(error) {
+		if(error.code === "auth/wrong-password"){
+			console.log("Wrong password");
+		} else {
+			console.log("Error signing in: ", error);
+		}
+	});
+}
+
+/**
+ * Firebase sign up method
+ * @params {form} $this
+ * @params {string} email
+ * @params {string} password
+ */
+function firebaseCreateUserWithEmailAndPassword($this, email, password){
+	firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
+		//console.log("registered");
+		$this.submit()
+	}).catch(function(error) {
+		if(error == "auth/email-already-in-use"){
+			firebaseSignInWithEmailAndPassword($this, email, password);
+		} else {
+			console.log("Error ", error);
+		}
+	});
+}
+
+
+
