@@ -9,6 +9,14 @@ class Admin::MembersController < ApplicationController
 	end
 
 	def show
+		@memberid = params[:id]
+	end
+
+	def check_in
+
+	end
+
+	def check_out
 
 	end
 
@@ -16,39 +24,39 @@ class Admin::MembersController < ApplicationController
 	end
 
 	def update
-		respond_to do |format|
-			if @member.update(member_params)
-				format.html { redirect_to admin_member_path(@member), notice: 'Member was successfully updated' }
-			else
-				format.html { render :edit }
-			end
-		end
+		# respond_to do |format|
+		# 	if @member.update(member_params)
+		# 		format.html { redirect_to admin_member_path(@member), notice: 'Member was successfully updated' }
+		# 	else
+		# 		format.html { render :edit }
+		# 	end
+		# end
 	end
 
 	def new
-		@member = Admin::Member.new
+		#@member = Admin::Member.new
 	end
 
 	def create
-		@member = Admin::Member.new(member_params)
-
-	    respond_to do |format|
-	      if @member.save
-	        format.html { redirect_to admin_member_path(@member), notice: 'Member was successfully created.' }
-	      else
-	        format.html { render :new }
-	      end
-	    end
+		# @member = Admin::Member.new(member_params)
+    #
+	   #  respond_to do |format|
+	   #    if @member.save
+	   #      format.html { redirect_to admin_member_path(@member), notice: 'Member was successfully created.' }
+	   #    else
+	   #      format.html { render :new }
+	   #    end
+	   #  end
 	end
 
 	def destroy
-		respond_to do |format|
-			if @member.destroy
-				format.html {redirect_to admin_members_path, notice: 'Member successfully destroyed'}	
-			else
-				format.html { render :show }
-			end
-		end
+		# respond_to do |format|
+		# 	if @member.destroy
+		# 		format.html {redirect_to admin_members_path, notice: 'Member successfully destroyed'}
+		# 	else
+		# 		format.html { render :show }
+		# 	end
+		# end
 	end
 
 
