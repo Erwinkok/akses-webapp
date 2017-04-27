@@ -8,7 +8,7 @@
 
       <div class="form-group">
         <%= f.label :email %><br />
-        <%= f.email_field :email, autofocus: false, class: 'form-control' %>
+        <%= f.email_field :email, autofocus: false, class: 'form-control', id: "sign_up_email" %>
       </div>
 
       <div class="form-group">
@@ -16,16 +16,16 @@
         <% if @minimum_password_length %>
         <em>(<%= @minimum_password_length %> characters minimum)</em>
         <% end %><br />
-        <%= f.password_field :password, autocomplete: "off", class: 'form-control' %>
+        <%= f.password_field :password, autocomplete: "off", class: 'form-control', id: "sign_up_password" %>
       </div>
 
       <div class="form-group">
         <%= f.label :password_confirmation %><br />
-        <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control' %>
+        <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control', id: "sign_up_password_confirmation" %>
       </div>
 
       <div class="form-group">
-        <%= f.submit "Sign up", class: "btn btn-danger btn-block btn-lg" %>
+        <%= f.submit "Sign up", class: "btn btn-danger btn-block btn-lg", id: "sign_up" %>
       </div>
     <% end %>
     <div class="text-center">
