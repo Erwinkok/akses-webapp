@@ -1,5 +1,4 @@
 $(document).ready(function(){
-	var $admin = null;
 	// Initialize Firebase
 	initializeFirebase();
 
@@ -9,6 +8,7 @@ $(document).ready(function(){
 	//Checking what the current auth state is
 	firebase.auth().onAuthStateChanged(function(user) {
 	  	if(user != null) {
+			console.log(user.uid);
 			getSpaceId(user.uid);
 		}
 	});
@@ -25,11 +25,11 @@ function initializeFirebase() {
 		storageBucket: "akses-dev.appspot.com",
 		messagingSenderId: "389795367383"
 	};
-
 	firebase.initializeApp(config);
 }
 
 function getSpaceId(userUid){
+	console.log(userUid);
 	firebase.database().ref('admins/users/'+userUid).once("value").then(function(snapshot){
 		snapshot.forEach(function (adminSnapshot) {
 			getSpaceMembers(adminSnapshot.getKey());
@@ -38,11 +38,28 @@ function getSpaceId(userUid){
 }
 
 function getSpaceMembers(spaceId){
+	var members = [];
 	firebase.database().ref("spaceMembers/"+spaceId).once('value').then(function(snapshot){
 		snapshot.forEach(function(memberSnapshot) {
 			var member = memberSnapshot.val();
-			console.log(member);
+			members.push(member);
 		});
+		members.forEach(function(member){
+			$.ajax({
+				url: '/admin/members',
+				type: 'POST',
+				data: {
+					name: member.name,
+					email: member.email
+				},
+				success: function(){
+					console.log("Inserted Member:", member);
+				}
+			});
+		});
+
+		//localStorage.clear();
+		//localStorage.setItem("members", JSON.stringify(members));
 	});
 }
 
