@@ -18,7 +18,7 @@
 					<tr>
 						<td><%= member.name %></td>
 						<td><%= member.email %></td>
-						<td>Check in</td>
+						<td>Check in<%# link_to 'Check in', '/admin/members/check_in/' + member.id %></td>
 						<td>Check out</td>
 						<td><%= link_to 'Show Member', [member] %></td>
 					</tr>
