@@ -102,8 +102,12 @@ function firebaseSignInWithEmailAndPassword($this, email, password){
 	}).catch(function(error) {
 		if(error.code === "auth/wrong-password"){
 			console.log("Wrong password");
+			$(".login_error").html("Username or password incorrect!");
+			$("#sign_in").prop("disabled", false);
 		} else {
 			console.log("Error signing in: ", error);
+			$(".login_error").html("Username or password incorrect!");
+			$("#sign_in").prop("disabled", false);
 		}
 	});
 }
