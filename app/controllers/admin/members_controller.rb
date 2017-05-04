@@ -19,11 +19,12 @@ class Admin::MembersController < ApplicationController
 	end
 
 	def show
-		@memberid = params[:id]
+		#@memberid = params[:id]
 	end
 
 	def check_in
-
+		render params[:id].inspect
+		@id = params[:id]
 	end
 
 	def check_out
@@ -72,7 +73,6 @@ class Admin::MembersController < ApplicationController
 		end
 	end
 
-
 	private
 
 	def set_member
@@ -80,7 +80,7 @@ class Admin::MembersController < ApplicationController
     end
 
     def member_params
-		params.permit(:name, :email)
+		params.permit(:memberId, :name, :email, :spaceId)
     end
 
 end

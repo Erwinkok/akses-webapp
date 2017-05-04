@@ -1,8 +1,8 @@
 <div class="row">
 	<div class="col-sm-12">
 		<div class="sub-header">
-			<h1 class="pull-left member_name"></h1>
-		</div>
+      <h1 class="pull-left"><%= @member.name %></h1>
+    </div>
 	</div>
 
 	<div class="content-wrapper">
@@ -15,14 +15,22 @@
 			<p>
 				<strong>Name</strong>
 				<br>
-        <span class="member_name"></span>
-			</p>
+        <%= @member.name %>
+      </p>
 			<p>
 				<strong>Email</strong>
 				<br>
-        <span class="member_email"></span>
-			</p>
+        <%= @member.email %>
+      </p>
 		</div>
+
+    <div class="col-sm-12">
+      <div class="box-visits">
+        <lu class="member_list">
+
+        </lu>
+      </div>
+    </div>
 
 
 		<div class="col-sm-12">
@@ -36,6 +44,22 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
-     getMemberVisits(<%= @memberId %>);
+     getMemberVisits('<%= @member.memberId %>', '<%= @member.spaceId %>');
   });
+
+  function getMemberVisits(memberId, spaceId){
+      firebase.database().ref("spaceMemberVisits/"+spaceId+"/"+memberId).once('value').then(function(snapshot){
+          snapshot.forEach(function(snapShot) {
+              var visit = snapShot.val();
+              console.log(visit);
+              $(".member_list").append("<li>" + visit.id + "</li>");
+          });
+      });
+  }
+
+  function getTime(miliseconds){
+      var seconds = (A/1000)%60
+      minutes=(A/(1000*60))%60
+      hours=(A/(1000*60*60))%24
+  }
 </script>
