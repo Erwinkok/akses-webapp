@@ -24,6 +24,14 @@
       </p>
 		</div>
 
+    <div class="col-sm-12">
+      <div class="box-visits">
+        <lu class="member_list">
+
+        </lu>
+      </div>
+    </div>
+
 
 		<div class="col-sm-12">
 			<div class="box-footer">
@@ -36,6 +44,22 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
-     getMemberVisits(<%= @memberId %>);
+     getMemberVisits('<%= @member.memberId %>', '<%= @member.spaceId %>');
   });
+
+  function getMemberVisits(memberId, spaceId){
+      firebase.database().ref("spaceMemberVisits/"+spaceId+"/"+memberId).once('value').then(function(snapshot){
+          snapshot.forEach(function(snapShot) {
+              var visit = snapShot.val();
+              console.log(visit);
+              $(".member_list").append("<li>" + visit.id + "</li>");
+          });
+      });
+  }
+
+  function getTime(miliseconds){
+      var seconds = (A/1000)%60
+      minutes=(A/(1000*60))%60
+      hours=(A/(1000*60*60))%24
+  }
 </script>

@@ -50,7 +50,9 @@ function getSpaceMembers(spaceId){
 				type: 'POST',
 				data: {
 					name: member.name,
-					email: member.email
+					email: member.email,
+                    spaceId: spaceId,
+                    memberId: member.id
 				},
 				success: function(){
 					console.log("Inserted Member:", member);

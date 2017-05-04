@@ -14,6 +14,7 @@ ActiveRecord::Schema.define(version: 20170420043335) do
 
   create_table "members", force: :cascade do |t|
     t.string   "memberId"
+    t.string   "spaceId"
     t.string   "name"
     t.string   "email"
     t.datetime "created_at", null: false
