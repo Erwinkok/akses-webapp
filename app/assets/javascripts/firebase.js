@@ -8,8 +8,23 @@ $(document).ready(function(){
 	//Checking what the current auth state is
 	firebase.auth().onAuthStateChanged(function(user) {
 	  	if(user != null) {
-			console.log(user.uid);
-			getSpaceId(user.uid);
+			this.user = user;
+			localStorage.setItem("current_member", JSON.stringify(user));
+			$.ajax({
+				url: '/admin/members/save_uid',
+				type: 'PUT',
+				data: {
+					email: user.email,
+					uid: user.uid
+				},
+				success: function(){
+					//console.log("uid saved");
+				}
+			});
+			if(localStorage.getItem("membersLoaded") != "true"){
+				//console.log("getting everything");
+				getSpaceId(user);
+			}
 		}
 	});
 });
@@ -28,10 +43,11 @@ function initializeFirebase() {
 	firebase.initializeApp(config);
 }
 
-function getSpaceId(userUid){
-	console.log(userUid);
-	firebase.database().ref('admins/users/'+userUid).once("value").then(function(snapshot){
+function getSpaceId(user){
+	//console.log(user.uid);
+	firebase.database().ref('admins/users/'+user.uid).once("value").then(function(snapshot){
 		snapshot.forEach(function (adminSnapshot) {
+			//console.log(adminSnapshot);
 			getSpaceMembers(adminSnapshot.getKey());
 		})
 	});
@@ -39,6 +55,8 @@ function getSpaceId(userUid){
 
 function getSpaceMembers(spaceId){
 	var members = [];
+    var counter = 0;
+	//console.log(spaceId);
 	firebase.database().ref("spaceMembers/"+spaceId).once('value').then(function(snapshot){
 		snapshot.forEach(function(memberSnapshot) {
 			var member = memberSnapshot.val();
@@ -53,14 +71,22 @@ function getSpaceMembers(spaceId){
 					email: member.email
 				},
 				success: function(){
-					console.log("Inserted Member:", member);
+					//console.log("Inserted Member:", member);
+                    counter++;
+                    if(counter == members.length) {
+                        // setting localstorage otherwise evert time the page reloads there will be another firebase database function called to get the members.
+                        localStorage.setItem("membersLoaded", "true");
+                        //refresh the page to show the newly added member(s)
+                        window.location.href = "/admin/members";
+                    }
 				}
 			});
 		});
+	}).catch(function(error){
+        console.log("Error getting the members");
+        //console.log(error);
+    });
 
-		//localStorage.clear();
-		//localStorage.setItem("members", JSON.stringify(members));
-	});
 }
 
 //All the event listeners
@@ -87,7 +113,7 @@ function eventListeners(){
 		//TODO Fix the firebase login after register, like ruby on rails does.
 		/**
 		 * This makes sure that rails doesn't leave the page before firebase could do anyting.
-		 * Without it firebase will trow an instant network error
+		 * Without it firebase will trow an network error
 		 */
 		event.preventDefault();
 
@@ -102,8 +128,16 @@ function eventListeners(){
 
 	//Look if someone clicks the sign out button
 	$("#sign_out").click(function(){
-		//Log out from firebase
+		//Log out from firebase and clear the localStorage so no data is left behind
+		localStorage.clear();
 		firebase.auth().signOut();
+	});
+
+	$("#force_refresh_members").click(function(){
+		//console.log("Refresh");
+		var user = JSON.parse(localStorage.getItem("current_member"));
+		getSpaceId(user);
+		localStorage.removeItem("membersLoaded");
 	});
 }
 

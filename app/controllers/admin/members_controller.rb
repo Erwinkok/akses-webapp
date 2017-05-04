@@ -4,6 +4,16 @@ class Admin::MembersController < ApplicationController
 
 	layout 'member'
 
+	def save_uid
+		@user = User.where(:email => params[:email])
+		respond_to do |format|
+			if @user[0].update_attribute(:firebase_uid, params[:uid])
+				format.html {}
+			end
+		end
+
+	end
+
 	def index
 		@members = Admin::Member.all.order('created_at DESC')
 	end
