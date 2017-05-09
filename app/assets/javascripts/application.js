@@ -18,6 +18,6 @@
 //= require react_ujs
 //= require components
 //= require google_firebase
-//= require firebase
+//= require firebaseLogin
 //= require_tree .
 
