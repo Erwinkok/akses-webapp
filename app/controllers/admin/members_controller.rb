@@ -4,18 +4,34 @@ class Admin::MembersController < ApplicationController
 
 	layout 'member'
 
-	def save_uid
-		@user = User.where(:email => params[:email])
-		respond_to do |format|
-			if @user[0].update_attribute(:firebase_uid, params[:uid])
-				format.html {}
-			end
-		end
+	# def save_uid
+	# 	user = User.where(:email => params[:email])
+	# 	respond_to do |format|
+	# 		if user[0].update_attribute(:firebase_uid, params[:uid])
+	# 			format.html {}
+	# 		end
+	# 	end
+	# end
 
-	end
+	# def save_space_id
+	# 	render params[:email].inspect
+	# 	user = User.where(:email => params[:email])
+	# 	if user.firebase_spaceId != params['spaceId']
+	# 		respond_to do |format|
+	# 			if user[0].update_attribute(:firebase_spaceId, params['spaceId'])
+	# 				format.html {}
+	# 			end
+	# 		end
+	# 	end
+	# end
 
 	def index
-		@members = Admin::Member.all.order('created_at DESC')
+		if current_user
+			me = current_user
+			@members = Admin::Member.where(:spaceId => me.firebase_spaceId)
+		end
+
+		#@members = Admin::Member.all.order('created_at DESC')
 	end
 
 	def show
@@ -75,12 +91,12 @@ class Admin::MembersController < ApplicationController
 
 	private
 
-	def set_member
+		def set_member
       @member = Admin::Member.find(params[:id])
     end
 
     def member_params
-		params.permit(:memberId, :name, :email, :spaceId)
+			params.permit(:memberId, :name, :email, :spaceId)
     end
 
 end
