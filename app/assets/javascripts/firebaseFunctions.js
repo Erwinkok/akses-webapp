@@ -29,8 +29,9 @@ function getSpaceId(user){
             //createUser(user);
         }
         snapshot.forEach(function(adminSnapshot) {
-            getSpaceMembers(user, adminSnapshot.getKey());
-
+            var spaceId = adminSnapshot.getKey();
+            getSpaceMembers(user, spaceId);
+            localStorage.setItem("spaceId", JSON.stringify(spaceId));
         });
     });
 }
@@ -55,5 +56,4 @@ function getSpaceMembers(user, spaceId){
                 "</tr>");
         });
     });
-
 }

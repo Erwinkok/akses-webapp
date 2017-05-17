@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-sm-12">
 		<div class="sub-header">
-      <h1 class="pull-left"></h1>
+      <h1 class="pull-left"><span class="name-holder"></span></h1>
     </div>
 	</div>
 
@@ -15,12 +15,12 @@
 			<p>
 				<strong>Name</strong>
 				<br>
-
+        <span class="name-holder"></span>
       </p>
 			<p>
 				<strong>Email</strong>
 				<br>
-
+        <span class="email-holder"></span>
       </p>
 		</div>
 
@@ -49,20 +49,18 @@
       var member;
       var urlArray = window.location.href.split('/');
       var memberId = urlArray[urlArray.length-1];
-
-//      firebase.ref("/members/" + memberId).once(function () {
-//
-//      });
-
-
-      //getMemberVisits('<%# @member.memberId %>', '<%# @member.spaceId %>');
+      var spaceId = JSON.parse(localStorage.getItem("spaceId"));
+      firebase.database().ref("spaceMembers/" + spaceId + "/" + memberId).once("value").then(function (snapshot) {
+          member = snapshot.val();
+          $(".name-holder").text(member.name);
+          $(".email-holder").text(member.email);
+          getMemberVisits(member.id, spaceId);
+      });
   });
 
   function getMemberVisits(memberId, spaceId){
-      console.log("Twice");
       var counter = 1;
       $(".member_list").html("");
-      console.log("Deployed");
       firebase.database().ref("spaceMemberVisits/"+spaceId+"/"+memberId).orderByChild("_beginAt").once('value').then(function(snapshot){
           snapshot.forEach(function(snapShot) {
               var visit = snapShot.val();
