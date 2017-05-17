@@ -17,15 +17,17 @@ $(document).ready(function(){
 /* - - - - FUNCTIONS - - - - */
 
 function initializeFirebase() {
-	var config = {
-		apiKey: "AIzaSyCGhqnb48DGJ73DyrNNHTK0_AYxgtpA58o",
-		authDomain: "akses-dev.firebaseapp.com",
-		databaseURL: "https://akses-dev.firebaseio.com",
-		projectId: "akses-dev",
-		storageBucket: "akses-dev.appspot.com",
-		messagingSenderId: "389795367383"
-	};
-	firebase.initializeApp(config);
+    if (firebase.apps.length === 0) {
+        var config = {
+            apiKey: "AIzaSyCGhqnb48DGJ73DyrNNHTK0_AYxgtpA58o",
+            authDomain: "akses-dev.firebaseapp.com",
+            databaseURL: "https://akses-dev.firebaseio.com",
+            projectId: "akses-dev",
+            storageBucket: "akses-dev.appspot.com",
+            messagingSenderId: "389795367383"
+        };
+        firebase.initializeApp(config);
+    }
 }
 
 function getSpaceId(userUid){
