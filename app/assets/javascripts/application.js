@@ -13,11 +13,11 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap-sprockets
-//= require turbolinks
 //= require react
 //= require react_ujs
 //= require components
 //= require google_firebase
-//= require firebase
+//= require firebaseLogin
+//= require firebaseFunctions
 //= require_tree .
 
