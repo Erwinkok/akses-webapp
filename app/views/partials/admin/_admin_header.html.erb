@@ -14,8 +14,8 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
           <li><%= link_to "Members", admin_members_path %></li>
-          <li><a href="#">Checked in</a></li>
-          <li><a href="#">Checked out</a></li>
+          <li><a href="/admin/members/check_in">Checked in</a></li>
+          <li><a href="/admin/members/check_out">Checked out</a></li>
           <li><i class="fa fa-sign-out" aria-hidden="true"></i><%= link_to "Sign Out", destroy_user_session_path, :method => :delete, id: "sign_out" %></li>
         </ul>
       </div>

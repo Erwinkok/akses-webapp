@@ -39,8 +39,7 @@ class Admin::MembersController < ApplicationController
 	end
 
 	def check_in
-		render params[:id].inspect
-		@id = params[:id]
+
 	end
 
 	def check_out

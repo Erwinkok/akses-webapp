@@ -1,8 +1,42 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="sub-header">
+      <h1 class="pull-left">Checked In Members</h1>
+    </div>
 
-<h1><%= render @id.inspect %></h1>
+    <table class="table table-bordered">
+      <thead>
+      <th>Name</th>
+      <th>Email</th>
+      <th colspan="3">Actions</th>
+      </thead>
+      <tbody class="check_in_member_table">
+
+      </tbody>
+    </table>
+  </div>
+</div>
 
 <script type="text/javascript">
+    var members = [];
+    var spaceId = JSON.parse(localStorage.getItem("spaceId"));
+    firebase.database().ref("spaceMembers/"+spaceId).on('value', function(snapshot){
+        snapshot.forEach(function(memberSnapshot) {
+            var member = memberSnapshot.val();
+            if (member.activeVisit){
+                members.push(member);
+            }
+        });
 
-    // TODO CHECKIN
-
+        $(".check_in_member_table").html("");
+        members.forEach(function(member){
+            $(".check_in_member_table").append(  "<tr>" +
+                "<td>" + member.name + "</td>" +
+                "<td>" + member.email + "</td>" +
+                "<td>Check in</td>" +
+                "<td>Check out</td>" +
+                "<td><a href='/admin/members/" + member.id + "'>Show Member</a></td>" +
+                "</tr>");
+        });
+    });
 </script>

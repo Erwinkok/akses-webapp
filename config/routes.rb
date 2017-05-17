@@ -5,8 +5,7 @@ Rails.application.routes.draw do
   	resources :members do
       collection do
         get 'check_in'
-        # put 'save_uid'
-        # put 'save_space_id'
+        get 'check_out'
       end
     end
   end
