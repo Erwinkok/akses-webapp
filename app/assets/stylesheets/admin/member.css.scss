@@ -21,6 +21,18 @@
 	color: red;
 }
 
+#check_in:hover, #check_out:hover {
+	cursor: pointer;
+	font-style: italic;
+}
+
+#checked_in {
+	color: lightgrey;
+}
+
+#checked_out {
+	color: lightgrey;
+}
 .box-footer {
   margin-bottom: 50px;
 }

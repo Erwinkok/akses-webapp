@@ -42,7 +42,7 @@ class Admin::MembersController < ApplicationController
 
 	end
 
-	def check_out
+	def checked_out
 
 	end
 

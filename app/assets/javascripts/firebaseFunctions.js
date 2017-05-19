@@ -6,6 +6,7 @@ $(document).ready(function(){
         localStorage.clear();
         firebase.auth().signOut();
     });
+
 });
 
 function createUser(user) {
@@ -47,12 +48,51 @@ function getSpaceMembers(user, spaceId){
 
         $(".member_table").html("");
         members.forEach(function(member){
+            if(member.activeVisit != null){
+                $(".member_table").append(  "<tr>" +
+                    "<td>" + member.name + "</td>" +
+                    "<td>" + member.email + "</td>" +
+                    "<td id='checked_in'>Checked in</td>" +
+                    "<td id='check_out'>Check out</td>" +
+                    "<td><a href='/admin/members/" + member.id + "'>Show Member</a></td>" +
+                "</tr>");
+            } else {
+                $(".member_table").append(  "<tr>" +
+                    "<td>" + member.name + "</td>" +
+                    "<td>" + member.email + "</td>" +
+                    "<td id='check_in'>Check in</td>" +
+                    "<td id='checked_out'>Check out</td>" +
+                    "<td><a href='/admin/members/" + member.id + "'>Show Member</a></td>" +
+                "</tr>");
+            }
+
+            
+        });
+    });
+}
+
+function getActiveSpaceMembers() {
+    var user = JSON.parse(localStorage.getItem("user"));
+    var spaceId = JSON.parse(localStorage.getItem("spaceId"));
+    var activeMembers = [];
+
+    console.log("user", user);
+    console.log("spaceId", spaceId);
+
+    firebase.database().ref("spaceMembers/"+spaceId).hasChild("activeVisit").on("value", function(snapshot) {
+        snapshot.forEach(function(activeMemberSnapshot){
+            var activeMember = memberSnapshot.val();
+            activeMembers.push(activeMember);
+        });
+
+        $(".active_member_table").html("");
+        activeMembers.forEach(function(activeMember){
             $(".member_table").append(  "<tr>" +
-                "<td>" + member.name + "</td>" +
-                "<td>" + member.email + "</td>" +
-                "<td>Check in</td>" +
-                "<td>Check out</td>" +
-                "<td><a href='/admin/members/" + member.id + "'>Show Member</a></td>" +
+                    "<td>" + member.name + "</td>" +
+                    "<td>" + member.email + "</td>" +
+                    "<td id='checked_in'>Checked in</td>" +
+                    "<td id='check_out'>Check out</td>" +
+                    "<td><a href='/admin/members/" + member.id + "'>Show Member</a></td>" +
                 "</tr>");
         });
     });
